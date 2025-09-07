@@ -1,0 +1,60 @@
+services:
+  postgres:
+    image: bitnami/postgresql:latest
+    container_name: mlflow_postgres
+    environment:
+      - POSTGRESQL_USERNAME=mlflow
+      - POSTGRESQL_PASSWORD=mlflow
+      - POSTGRESQL_DATABASE=mlflow_db
+    volumes:
+      - postgres_data:/bitnami/postgresql
+    ports:
+      - "5433:5432"
+
+  minio:
+    image: bitnami/minio:latest
+    container_name: mlflow_minio
+    environment:
+      - MINIO_ROOT_USER=minio
+      - MINIO_ROOT_PASSWORD=minio123
+      - MINIO_DEFAULT_BUCKETS=mlflow:readwrite
+    command: server /bitnami/minio/data --console-address ":9001"
+    ports:
+      - "9000:9000" # S3 API
+      - "9001:9001" # Web console
+    volumes:
+      - minio_data:/bitnami/minio/data
+
+  minio-init:
+    image: bitnami/minio-client:latest
+    depends_on:
+      - minio
+    entrypoint: ["/bin/sh", "/init.sh"]
+    volumes:
+      - ./scripts/init.sh:/init.sh
+
+  mlflow:
+    image: bitnami/mlflow:latest
+    container_name: mlflow_server
+    depends_on:
+      - postgres
+      - minio
+    environment:
+      - MLFLOW_BACKEND_STORE_URI=postgresql://mlflow:mlflow@postgres:5432/mlflow_db
+      - MLFLOW_DEFAULT_ARTIFACT_ROOT=s3://mlflow/
+      - AWS_ACCESS_KEY_ID=minio
+      - AWS_SECRET_ACCESS_KEY=minio123
+      - MLFLOW_S3_ENDPOINT_URL=http://minio:9000
+    ports:
+      - "5000:5000"
+    entrypoint: ["mlflow"]
+    command:
+      - server
+      - --backend-store-uri=postgresql://mlflow:mlflow@postgres:5432/mlflow_db
+      - --default-artifact-root=s3://mlflow/
+      - --host=0.0.0.0
+      - --port=5000
+      - --serve-artifacts
+volumes:
+  postgres_data:
+  minio_data:
