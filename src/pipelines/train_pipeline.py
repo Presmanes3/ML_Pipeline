@@ -6,8 +6,6 @@ import numpy as np
 
 from dotenv import load_dotenv
 
-load_dotenv()
-
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.compose import ColumnTransformer
@@ -16,35 +14,31 @@ from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 
+from mlflow.models.signature import infer_signature
+
+# Load environment variables from .env
+load_dotenv()
 
 
 def load_data(data_path: str):
-    """Carga dataset procesado"""
+    """Load dataset"""
     return pd.read_csv(data_path)
 
 
-def build_pipeline(categorical_features, numeric_features, model_type="linear"):
-    """Construye un pipeline con preprocesamiento + modelo"""
+def build_pipeline(categorical_features, numeric_features, model):
+    """Build pipeline with preprocessing + model"""
     preprocessor = ColumnTransformer(
         transformers=[
             ("categorical", OneHotEncoder(handle_unknown="ignore"), categorical_features),
             ("numeric", StandardScaler(), numeric_features),
         ]
     )
-
-    if model_type == "linear":
-        model = LinearRegression()
-    elif model_type == "random_forest":
-        model = RandomForestRegressor(n_estimators=100, random_state=42)
-    else:
-        raise ValueError(f"Modelo no soportado: {model_type}")
-
     pipeline = Pipeline(steps=[("preprocessor", preprocessor), ("model", model)])
     return pipeline
 
 
 def eval_metrics(y_true, y_pred):
-    """Calcula métricas de regresión"""
+    """Regression metrics"""
     rmse = np.sqrt(mean_squared_error(y_true, y_pred))
     mae = mean_absolute_error(y_true, y_pred)
     r2 = r2_score(y_true, y_pred)
@@ -52,16 +46,14 @@ def eval_metrics(y_true, y_pred):
 
 
 def main():
-    # --- Configuración ---
-    print("Iniciando pipeline de entrenamiento...")
+    # --- Config ---
+    print("Starting training pipeline...")
     data_path = "./data/processed/NY-House-Dataset-Cleaned.csv"
     target = "PRICE_LOG"
     categorical_features = ["LOCALITY_GROUPED", "TYPE"]
     numeric_features = ["BEDS", "BATH", "SQFT_LOG", "DIST_TO_MANHATTAN"]
 
-    model_type = "random_forest"
-
-    # --- Cargar datos ---
+    # --- Load data ---
     df = load_data(data_path)
     X = df[categorical_features + numeric_features]
     y = df[target]
@@ -74,31 +66,64 @@ def main():
     mlflow.set_tracking_uri("http://127.0.0.1:5000")
     mlflow.set_experiment("ML-Pipeline")
 
-    with mlflow.start_run():
-        pipeline = build_pipeline(categorical_features, numeric_features, model_type)
-        pipeline.fit(X_train, y_train)
+    # Define 5 hyperparameter combinations
+    param_grid = [
+        {"n_estimators": 100, "max_depth": None, "random_state": 42},
+        {"n_estimators": 200, "max_depth": 10, "random_state": 42},
+        {"n_estimators": 300, "max_depth": 15, "random_state": 42},
+        {"n_estimators": 100, "max_depth": 5, "random_state": 123},
+        {"n_estimators": 500, "max_depth": None, "random_state": 99},
+    ]
 
-        preds = pipeline.predict(X_test)
+    for i, params in enumerate(param_grid, start=1):
+        with mlflow.start_run(run_name=f"run_{i}"):
+            print(f"\nTraining model {i} with params: {params}")
 
-        rmse, mae, r2 = eval_metrics(y_test, preds)
+            model = RandomForestRegressor(
+                n_estimators=params["n_estimators"],
+                max_depth=params["max_depth"],
+                random_state=params["random_state"],
+            )
 
-        # Log params
-        mlflow.log_param("model_type", model_type)
+            pipeline = build_pipeline(categorical_features, numeric_features, model)
+            pipeline.fit(X_train, y_train)
 
-        # Log metrics
-        mlflow.log_metric("rmse", rmse)
-        mlflow.log_metric("mae", mae)
-        mlflow.log_metric("r2", r2)
+            preds = pipeline.predict(X_test)
 
-        # Log model
-        mlflow.sklearn.log_model(
-            pipeline,
-            artifact_path="model"
-            # registered_model_name="house-prices-predictor"
-        )
+            rmse, mae, r2 = eval_metrics(y_test, preds)
 
-        print(f"Modelo: {model_type}")
-        print(f"RMSE: {rmse:.4f}, MAE: {mae:.4f}, R2: {r2:.4f}")
+            # Log params
+            mlflow.log_param("model_type", "random_forest")
+            mlflow.log_param("n_estimators", params["n_estimators"])
+            mlflow.log_param("max_depth", params["max_depth"])
+            mlflow.log_param("random_state", params["random_state"])
+
+            # Log metrics
+            mlflow.log_metric("rmse", rmse)
+            mlflow.log_metric("mae", mae)
+            mlflow.log_metric("r2", r2)
+
+            # Add input example + signature
+            example = X_test.iloc[:1]
+            signature = infer_signature(X_train, pipeline.predict(X_train))
+
+            # Register model in Model Registry
+            mlflow.sklearn.log_model(
+                pipeline,
+                name="random_forest",
+                registered_model_name="house-prices-predictor",
+                input_example=example,
+                signature=signature,
+                metadata={
+                    "dataset": "NY-House-Dataset",
+                    "features": "LOCALITY_GROUPED, TYPE, BEDS, BATH, SQFT_LOG, DIST_TO_MANHATTAN",
+                },
+                tags={"team": "ml-engineering", "type": "regression"},
+            )
+
+            print(
+                f"Model {i} | RMSE: {rmse:.4f}, MAE: {mae:.4f}, R2: {r2:.4f}"
+            )
 
 
 if __name__ == "__main__":

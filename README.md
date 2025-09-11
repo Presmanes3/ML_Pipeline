@@ -5,7 +5,7 @@
 ---
 
 ## 📂 Dataset
-- Tabular dataset: **Titanic** (survival) or **House Prices** (regression).  
+- Tabular dataset: **House Prices** (regression).  
 
 ---
 
@@ -47,11 +47,11 @@
 ---
 
 ## 🚀 Clear Goals
-- [ ] Build a reproducible pipeline for tabular data.  
+- [X] Build a reproducible pipeline for tabular data.  
 - [ ] Implement a feedforward model in PyTorch.  
-- [ ] Integrate MLflow for experiment tracking.  
-- [ ] Save and version the best trained model.  
-- [ ] Create a **Streamlit dashboard** for predictions and experiment visualization.  
+- [X] Integrate MLflow for experiment tracking.  
+- [X] Save and version the best trained model.  
+- [X] Create a **Streamlit dashboard** for predictions and experiment visualization.  
 - [ ] (Optional) Rewrite training using PyTorch Lightning.  
 
 ---
@@ -76,6 +76,23 @@ docker compose --env-file <path_to_your_env_file> up -d
 ```
 
 Replace `<path_to_your_env_file>` with the path to your desired `.env` file.
+
+# Streamlit App
+
+Execute the following command to run the Streamlit application:
+
+```bash
+streamlit run ./src/app.py
+```
+
+# MLflow Tracking UI
+
+Access the MLflow Tracking UI at: [http://localhost:5000](http://localhost:5000)
+
+# MinIO UI
+
+Access the MinIO UI at: [http://localhost:9001](http://localhost:9001)
+
 
 
 
