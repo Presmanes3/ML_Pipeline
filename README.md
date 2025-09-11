@@ -11,7 +11,7 @@
 
 ## 🔗 Project Pipeline
 1. **Data Ingestion and Cleaning**  
-    - Data processing with `pandas` or `Dask` for scalability.  
+    - Data processing with `pandas`for scalability.  
     - Handling missing values and outliers.  
 
 2. **Feature Engineering**  
@@ -65,3 +65,19 @@
   - Visualize training metrics, experiment comparisons, and feature importance.  
 
 ---
+
+# Installation
+
+Create a .env file and set the variables based on the [.env.example](./.env.example) file.
+
+Then, run docker compose as:
+```bash
+docker compose --env-file <path_to_your_env_file> up -d
+```
+
+Replace `<path_to_your_env_file>` with the path to your desired `.env` file.
+
+
+
+
+

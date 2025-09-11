@@ -2,6 +2,11 @@ import os
 import pandas as pd
 import mlflow
 import mlflow.sklearn
+import numpy as np
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
@@ -10,7 +15,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-import numpy as np
+
 
 
 def load_data(data_path: str):
@@ -48,6 +53,7 @@ def eval_metrics(y_true, y_pred):
 
 def main():
     # --- Configuración ---
+    print("Iniciando pipeline de entrenamiento...")
     data_path = "./data/processed/NY-House-Dataset-Cleaned.csv"
     target = "PRICE_LOG"
     categorical_features = ["LOCALITY_GROUPED", "TYPE"]
