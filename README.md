@@ -1,6 +1,12 @@
-# Reproducible ML Pipeline with MLflow and Streamlit
+# 🏠 ML Pipeline for House Price Prediction (MLflow + Streamlit)
 
-🎯 **Objective:** Structure a reproducible machine learning pipeline, integrate experiment tracking with MLflow, and build an interactive Streamlit app to visualize results.
+A **reproducible end-to-end ML pipeline** for house price prediction, integrating:
+- **Experiment tracking** with MLflow,
+- **Model versioning** with the MLflow Registry,
+- **Interactive dashboards** with Streamlit,
+- **Artifact storage** with MinIO.
+
+⚡ Designed to showcase best practices in **MLOps & Data Science**.
 
 ---
 
@@ -48,7 +54,7 @@
 
 ## 🚀 Clear Goals
 - [X] Build a reproducible pipeline for tabular data.  
-- [ ] Implement a feedforward model in PyTorch.  
+- [X] Implement a feedforward model in PyTorch.  
 - [X] Integrate MLflow for experiment tracking.  
 - [X] Save and version the best trained model.  
 - [X] Create a **Streamlit dashboard** for predictions and experiment visualization.  
@@ -57,12 +63,9 @@
 ---
 
 ## 📌 Expected Results
-- Reproducible and modular pipeline for tabular data.  
-- Experiment tracking in MLflow with metrics and artifacts.  
-- Versioned model ready for deployment.  
-- Interactive Streamlit app to:  
-  - Input new samples for prediction.  
-  - Visualize training metrics, experiment comparisons, and feature importance.  
+- Predict house prices with different ML models.  
+- Compare model performance interactively.  
+- Support decision-making with explainability visualizations (feature importance, locality distributions, etc).  
 
 ---
 
