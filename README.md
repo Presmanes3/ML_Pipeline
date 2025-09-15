@@ -96,7 +96,8 @@ Access the MLflow Tracking UI at: [http://localhost:5000](http://localhost:5000)
 
 Access the MinIO UI at: [http://localhost:9001](http://localhost:9001)
 
-
+# TODO
+- [ ] Improve PyTorch model predictions.
 
 
 
