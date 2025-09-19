@@ -1,19 +1,18 @@
+# train.py
 import os
+import argparse
 import pandas as pd
 import mlflow
 import mlflow.sklearn
 import numpy as np
 
 from dotenv import load_dotenv
-
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
-from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-
 from mlflow.models.signature import infer_signature
 
 # Load environment variables from .env
@@ -45,13 +44,14 @@ def eval_metrics(y_true, y_pred):
     return rmse, mae, r2
 
 
-def main():
+def main(args):
+    print("🚀 Starting training pipeline...")
+
     # --- Config ---
-    print("Starting training pipeline...")
-    data_path = "./data/processed/NY-House-Dataset-Cleaned.csv"
+    data_path = args.data
     target = "PRICE_LOG"
-    categorical_features = ["LOCALITY_GROUPED", "TYPE"]
-    numeric_features = ["BEDS", "BATH", "SQFT_LOG", "DIST_TO_MANHATTAN"]
+    categorical_features = ["TYPE", "LOCALITY"]
+    numeric_features = ["BEDS_PER_SQFT", "BATH_PER_SQFT", "SQFT_LOG", "DIST_TO_MANHATTAN"]
 
     # --- Load data ---
     df = load_data(data_path)
@@ -66,17 +66,15 @@ def main():
     mlflow.set_tracking_uri("http://127.0.0.1:5000")
     mlflow.set_experiment("ML-Pipeline")
 
-    # Define 5 hyperparameter combinations
     param_grid = [
-        {"n_estimators": 100, "max_depth": None, "random_state": 42},
         {"n_estimators": 200, "max_depth": 10, "random_state": 42},
         {"n_estimators": 300, "max_depth": 15, "random_state": 42},
-        {"n_estimators": 100, "max_depth": 5, "random_state": 123},
-        {"n_estimators": 500, "max_depth": None, "random_state": 99},
+        {"n_estimators": 400, "max_depth": 20, "random_state": 42},
+        {"n_estimators": 500, "max_depth": 25, "random_state": 42},
     ]
 
     for i, params in enumerate(param_grid, start=1):
-        with mlflow.start_run(run_name=f"run_{i}"):
+        with mlflow.start_run(run_name="model_training") as run:
             print(f"\nTraining model {i} with params: {params}")
 
             model = RandomForestRegressor(
@@ -89,42 +87,43 @@ def main():
             pipeline.fit(X_train, y_train)
 
             preds = pipeline.predict(X_test)
-
             rmse, mae, r2 = eval_metrics(y_test, preds)
 
-            # Log params
-            mlflow.log_param("model_type", "random_forest")
-            mlflow.log_param("n_estimators", params["n_estimators"])
-            mlflow.log_param("max_depth", params["max_depth"])
-            mlflow.log_param("random_state", params["random_state"])
-
-            # Log metrics
+            # Log params & metrics
+            mlflow.log_params(params)
             mlflow.log_metric("rmse", rmse)
             mlflow.log_metric("mae", mae)
             mlflow.log_metric("r2", r2)
+            mlflow.log_param("features", f"""{categorical_features + numeric_features}""")
 
             # Add input example + signature
             example = X_test.iloc[:1]
             signature = infer_signature(X_train, pipeline.predict(X_train))
 
-            # Register model in Model Registry
-            mlflow.sklearn.log_model(
+            # Register model
+            model_info = mlflow.sklearn.log_model(
                 pipeline,
-                name="random_forest",
+                artifact_path="random_forest",
                 registered_model_name="house-prices-predictor",
                 input_example=example,
                 signature=signature,
                 metadata={
-                    "dataset": "NY-House-Dataset",
-                    "features": "LOCALITY_GROUPED, TYPE, BEDS, BATH, SQFT_LOG, DIST_TO_MANHATTAN",
+                    "dataset": os.path.basename(data_path),
+                    "features": f"""{categorical_features + numeric_features}""",
                 },
-                tags={"team": "ml-engineering", "type": "regression"},
             )
 
-            print(
-                f"Model {i} | RMSE: {rmse:.4f}, MAE: {mae:.4f}, R2: {r2:.4f}"
-            )
+            model_uri_runs = f"{model_info.model_uri}"
+
+            print(f"✅ Model {i} | RMSE: {rmse:.4f}, MAE: {mae:.4f}, R2: {r2:.4f}")
+            print(f"📌 Model URI (runs):   {model_uri_runs}")
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="Train a house price model")
+    parser.add_argument(
+        "--data", type=str, required=True,
+        help="Path to the dataset CSV file (e.g. ./data/processed/train.csv)"
+    )
+    args = parser.parse_args()
+    main(args)
