@@ -24,9 +24,9 @@ def plot_predictions(y_true, y_pred, output_dir):
     plt.figure(figsize=(6, 6))
     plt.scatter(y_true, y_pred, alpha=0.5)
     plt.plot([y_true.min(), y_true.max()], [y_true.min(), y_true.max()], "r--")
-    plt.xlabel("True Values")
-    plt.ylabel("Predictions")
-    plt.title("True vs Predicted")
+    plt.xlabel("True Values (log)")
+    plt.ylabel("Predictions (log)")
+    plt.title("True vs Predicted (log scale)")
     path1 = os.path.join(output_dir, "true_vs_pred.png")
     plt.savefig(path1)
     plt.close()
@@ -35,9 +35,9 @@ def plot_predictions(y_true, y_pred, output_dir):
     residuals = y_true - y_pred
     plt.figure(figsize=(6, 4))
     plt.hist(residuals, bins=50, edgecolor="black")
-    plt.xlabel("Residual")
+    plt.xlabel("Residual (log)")
     plt.ylabel("Frequency")
-    plt.title("Residuals Distribution")
+    plt.title("Residuals Distribution (log scale)")
     path2 = os.path.join(output_dir, "residuals_hist.png")
     plt.savefig(path2)
     plt.close()
@@ -61,13 +61,23 @@ def main(args):
     print("⚡ Running predictions...")
     preds = model.predict(X_test)
 
-    rmse, mae, r2 = eval_metrics(y_test, preds)
+    # Métricas en escala log
+    rmse_log, mae_log, r2 = eval_metrics(y_test, preds)
+
+    # Métricas en escala original
+    y_test_orig = np.expm1(y_test)   # inversa de log1p
+    preds_orig = np.expm1(preds)
+    rmse_orig, mae_orig, _ = eval_metrics(y_test_orig, preds_orig)
 
     with mlflow.start_run(run_name="model_evaluation"):
-        # Log metrics
-        mlflow.log_metric("rmse", rmse)
-        mlflow.log_metric("mae", mae)
+        # Log metrics en log scale
+        mlflow.log_metric("rmse_log", rmse_log)
+        mlflow.log_metric("mae_log", mae_log)
         mlflow.log_metric("r2", r2)
+
+        # Log metrics en escala original
+        mlflow.log_metric("rmse_original", rmse_orig)
+        mlflow.log_metric("mae_original", mae_orig)
 
         # Save and log plots
         artifact_dir = "./artifacts"
@@ -75,13 +85,20 @@ def main(args):
         for p in plots:
             mlflow.log_artifact(p, artifact_path="plots")
 
-        # Log raw predictions (optional, para debugging)
-        results = pd.DataFrame({"y_true": y_test, "y_pred": preds})
+        # Log raw predictions (con y_true e y_pred en ambas escalas)
+        results = pd.DataFrame({
+            "y_true_log": y_test,
+            "y_pred_log": preds,
+            "y_true_original": y_test_orig,
+            "y_pred_original": preds_orig
+        })
         csv_path = os.path.join(artifact_dir, "predictions.csv")
         results.to_csv(csv_path, index=False)
         mlflow.log_artifact(csv_path, artifact_path="predictions")
 
-        print(f"✅ Evaluation complete | RMSE: {rmse:.4f}, MAE: {mae:.4f}, R2: {r2:.4f}")
+        print(f"✅ Evaluation complete")
+        print(f"   RMSE (log): {rmse_log:.4f}, MAE (log): {mae_log:.4f}, R2: {r2:.4f}")
+        print(f"   RMSE (orig): {rmse_orig:.2f}, MAE (orig): {mae_orig:.2f}")
 
 
 if __name__ == "__main__":
