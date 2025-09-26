@@ -65,6 +65,7 @@ df = pd.read_csv("./data/processed/NY-House-Dataset-Cleaned.csv")
 
 localities = df["LOCALITY_GROUPED"].unique().tolist()
 types = df["TYPE"].unique().tolist()
+sublocalities = df["SUBLOCALITY"].unique().tolist()
 
 beds_min, beds_max = int(df["BEDS"].min()), int(df["BEDS"].max())
 bath_min, bath_max = int(df["BATH"].min()), int(df["BATH"].max())
@@ -77,17 +78,22 @@ dist_min, dist_max = float(df["DIST_TO_MANHATTAN"].min()), float(df["DIST_TO_MAN
 st.header("🔮 Predict House Price")
 
 locality = st.selectbox("Locality", localities)
+sublocality = st.selectbox("Sublocality", sublocalities + ["Other"])
 house_type = st.selectbox("Type", types)
 beds = st.slider("Number of Beds", beds_min, beds_max, 2)
 bath = st.slider("Number of Baths", bath_min, bath_max, 1)
 sqft = st.slider("Square Footage", sqft_min, sqft_max, 800)
 dist = st.slider("Distance to Manhattan (miles)", dist_min, dist_max, step=0.01)
 
+beds_per_sqft = beds / sqft
+bath_per_sqft = bath / sqft
+
 input_data = pd.DataFrame([{
-    "LOCALITY_GROUPED": locality,
+    "LOCALITY": locality,
+    "SUBLOCALITY": sublocality,
     "TYPE": house_type,
-    "BEDS": beds,
-    "BATH": bath,
+    "BEDS_PER_SQFT": beds_per_sqft,
+    "BATH_PER_SQFT": bath_per_sqft,
     "SQFT_LOG": np.log(sqft),
     "DIST_TO_MANHATTAN": dist,
 }])

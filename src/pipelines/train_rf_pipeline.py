@@ -50,7 +50,7 @@ def main(args):
     # --- Config ---
     data_path = args.data
     target = "PRICE_LOG"
-    categorical_features = ["TYPE", "LOCALITY"]
+    categorical_features = ["TYPE", "LOCALITY", "SUBLOCALITY"]
     numeric_features = ["BEDS_PER_SQFT", "BATH_PER_SQFT", "SQFT_LOG", "DIST_TO_MANHATTAN"]
 
     # --- Load data ---
@@ -68,9 +68,9 @@ def main(args):
 
     param_grid = [
         {"n_estimators": 200, "max_depth": 10, "random_state": 42},
-        {"n_estimators": 300, "max_depth": 15, "random_state": 42},
-        {"n_estimators": 400, "max_depth": 20, "random_state": 42},
-        {"n_estimators": 500, "max_depth": 25, "random_state": 42},
+        # {"n_estimators": 300, "max_depth": 15, "random_state": 42},
+        # {"n_estimators": 400, "max_depth": 20, "random_state": 42},
+        # {"n_estimators": 500, "max_depth": 25, "random_state": 42},
     ]
 
     for i, params in enumerate(param_grid, start=1):

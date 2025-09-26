@@ -71,8 +71,8 @@ def main(args):
 
     with mlflow.start_run(run_name="model_evaluation"):
         # Log metrics en log scale
-        mlflow.log_metric("rmse_log", rmse_log)
-        mlflow.log_metric("mae_log", mae_log)
+        mlflow.log_metric("rmse", rmse_log)
+        mlflow.log_metric("mae", mae_log)
         mlflow.log_metric("r2", r2)
 
         # Log metrics en escala original
