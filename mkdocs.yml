@@ -1,4 +1,5 @@
 site_name: NYC House Price Prediction
+site_url: https://presmanes3.github.io/NY-House-PricingPrediction/
 
 theme:
   name: material
