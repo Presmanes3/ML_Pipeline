@@ -1,0 +1,8 @@
+site_name: NYC House Price Prediction
+theme:
+  name: material
+
+nav:
+  - Home: index.md
+  - Problem Analysis: eda.md
+
