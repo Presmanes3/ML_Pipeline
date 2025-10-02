@@ -1,4 +1,5 @@
 site_name: NYC House Price Prediction
+
 theme:
   name: material
 
