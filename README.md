@@ -9,6 +9,14 @@ A **reproducible end-to-end ML pipeline** for house price prediction in New-York
 ⚡ Designed to showcase best practices in **MLOps & Data Science**.
 
 ---
+
+## 🌐 Live Documentation
+
+The full **project documentation** is available on **GitHub Pages** here:  
+👉 [Project Docs on GitHub Pages](https://presmanes3.github.io/NY-House-PricingPrediction)
+
+
+---
 ## 🎯 Project Overview
 This project demonstrates how to build and deploy a **full ML pipeline** for a real-world dataset.  
 
