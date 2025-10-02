@@ -39,5 +39,5 @@ This project is a **full pipeline for housing price prediction in New York City*
 ---
 
 ## 📬 Contact
-- GitHub: [@jpresmanes](https://github.com/Presmanes3)  
+- GitHub: [@presmanes3](https://github.com/Presmanes3)  
 - LinkedIn: [Javier Presmanes](https://www.linkedin.com/in/javierpresmanescardama/)  
