@@ -9,6 +9,14 @@ A **reproducible end-to-end ML pipeline** for house price prediction in New-York
 ⚡ Designed to showcase best practices in **MLOps & Data Science**.
 
 ---
+## 🎯 Project Overview
+This project demonstrates how to build and deploy a **full ML pipeline** for a real-world dataset.  
+
+- **Problem:** Predict house prices in New York City using tabular data.  
+- **Solution:** An end-to-end ML workflow with EDA, feature engineering, experiment tracking, model versioning, and a Streamlit dashboard.  
+- **Impact:** A reproducible and production-ready pipeline following **MLOps best practices**.  
+
+---
 
 ## 📂 Dataset
 - Tabular dataset: [**New York House Prices**](https://www.kaggle.com/datasets/nelgiriyewithana/new-york-housing-market) (regression).  
