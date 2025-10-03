@@ -29,6 +29,7 @@ os.environ["AWS_SECRET_ACCESS_KEY"] = os.getenv("AWS_SECRET_ACCESS_KEY")
 os.environ["MLFLOW_S3_ENDPOINT_URL"] = "http://localhost:9000"
 
 
+
 # ------------------------
 # Utilities
 # ------------------------
@@ -195,11 +196,11 @@ def main(args):
             signature = infer_signature(example, example_output)
             
             model_info = mlflow.sklearn.log_model(
-                sk_model=pipeline,
-                artifact_path="random_forest_regressor",
-                registered_model_name="RandomForestRegressor",
-                signature=signature,
-                input_example=example,
+                sk_model                = pipeline,
+                artifact_path           = "random_forest_regressor",
+                registered_model_name   = "RandomForestRegressor",
+                signature               = signature,
+                input_example           = example,
                 metadata={
                     "median_price": float(median_price),
                     "mean_price": float(mean_price),
@@ -208,6 +209,9 @@ def main(args):
                     "rmse_median": float(median_rmse),
                     "rmse_median_pct_of_median_price": float(median_rmse / median_price),
                     "rmse_median_pct_of_mean_price": float(median_rmse / mean_price),
+                    "cleaner_params": cleaner.__dict__,
+                    "localities" : X["LOCALITY"].unique(),
+                    "sublocalities" : X["SUBLOCALITY"].unique(),
                 }
             )
             

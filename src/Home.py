@@ -1,4 +1,15 @@
 import streamlit as st
+import os, sys
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
+os.environ["AWS_ACCESS_KEY_ID"] = os.getenv("AWS_ACCESS_KEY_ID")
+os.environ["AWS_SECRET_ACCESS_KEY"] = os.getenv("AWS_SECRET_ACCESS_KEY")
+os.environ["MLFLOW_S3_ENDPOINT_URL"] = "http://localhost:9000"
+
+sys.path.append(os.getcwd())
 
 # Set the page configuration with a title and wide layout
 st.set_page_config(page_title="House Price App", layout="wide")
