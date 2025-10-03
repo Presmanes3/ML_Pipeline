@@ -16,7 +16,7 @@ This project is a **full pipeline for housing price prediction in New York City*
 - **`Home.py`** → Streamlit app entry point.  
 - **Problem Analysis** → Exploratory Data Analysis, data cleaning, feature engineering. [Explore the EDA & visualizations](eda.md)  
 - **Business Requirements** → Overview of the business problem and objectives. [Read the business requirements](business.md) 
-- **Playground** → Interactive Streamlit app for users to input features and get price predictions. [Try the playground](#)
+- **Playground** → Interactive Streamlit app for users to input features and get price predictions. [Try the playground](playground.md)
 
 ---
 
