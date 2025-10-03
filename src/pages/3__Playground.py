@@ -28,25 +28,25 @@ def load_model():
     os.makedirs(local_model_dir, exist_ok=True)
 
     try:
-        # --- Intentar sincronización con MLflow ---
+        # --- Attempt synchronization with MLflow ---
         model_version = client.get_model_version_by_alias(
             name="RandomForestRegressor", alias="production"
         )
         model_uri = f"models:/RandomForestRegressor/{model_version.version}"
 
-        # Descargar y sobrescribir SIEMPRE en ./models/production_model
+        # Download and ALWAYS overwrite in ./models/production_model
         download_artifacts(model_uri, dst_path=local_model_dir)
-        st.success("✅ Modelo sincronizado desde MLflow.")
+        st.success("✅ Model synchronized from MLflow.")
 
     except Exception as e:
-        st.warning(f"⚠️ No se pudo sincronizar con MLflow ({e}). Usando modelo local...")
+        st.warning(f"⚠️ Could not synchronize with MLflow ({e}). Using local model...")
 
-    # --- Siempre usar el modelo local ---
+    # --- Always use the local model ---
     try:
         model = mlflow.sklearn.load_model(local_model_dir)
         return model, "local_model"
     except Exception as e2:
-        st.error(f"❌ No se pudo cargar el modelo local: {e2}")
+        st.error(f"❌ Could not load the local model: {e2}")
         raise e2
 
 
@@ -59,7 +59,7 @@ def load_metadata():
             mlmodel_yaml = yaml.safe_load(f)
         return mlmodel_yaml.get("metadata", {})
     else:
-        st.warning("⚠️ No se encontró el archivo MLmodel en el modelo local.")
+        st.warning("⚠️ The MLmodel file was not found in the local model.")
         return {}
 
 # ---------------------
