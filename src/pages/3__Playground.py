@@ -158,25 +158,18 @@ with st.expander("ℹ️ How to interpret model performance metrics", expanded=F
     if metadata:
         rmse = metadata.get("rmse_median")
         rmse_pct_median = metadata.get("rmse_median_pct_of_median_price")
-        rmse_pct_mean = metadata.get("rmse_median_pct_of_mean_price")
         mean_price = metadata.get("mean_price")
         median_price = metadata.get("median_price")
         r2 = metadata.get("r2_median")
         mae = metadata.get("mae_median")
+        mae_pct_median = metadata.get("mae_median_pct_of_median_price")
 
         st.markdown(f"""
-        **How to interpret the performance of this model:**
+        **Model Performance (Key Insights):**
 
-        - **Median RMSE:** {fmt_currency(rmse)}  
-        - **RMSE as % of median house price:** {fmt_percent(rmse_pct_median)}  
-        - **Median house price in dataset:** {fmt_currency(median_price)}  
-        - **RMSE as % of average house price:** {fmt_percent(rmse_pct_mean)}  
-        - **Average house price in dataset:** {fmt_currency(mean_price)}  
-        - **Median MAE:** {fmt_currency(mae)}  
-        - **R² (explained variance):** {r2:.2f}  
-
-        🔎 On average, the model’s prediction error is around 
-        **{fmt_percent(rmse_pct_median, 1)} of a typical house price**.  
+        - ✅ Average prediction error (MAE): **{fmt_currency(mae)}** (~{fmt_percent(mae_pct_median)} of a typical house).  
+        - ⚠️ Occasional larger errors (RMSE): **{fmt_currency(rmse)}** (~{fmt_percent(rmse_pct_median)} of the median price).  
+        - 📊 The model explains about **{r2:.2f} of price variance (R²)** → solid but not perfect accuracy.  
         """)
     else:
         st.info("No performance metadata available for this model.")
