@@ -1,0 +1,58 @@
+artifact_path: random_forest_regressor
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.12.0
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.6.1
+is_signature_from_type_hint: false
+metadata:
+  cleaner_params:
+    max_bath: 6
+    max_beds: 7
+    max_price: 3000000
+    max_sqft: 4000
+    min_bath: 1
+    min_beds: 1
+    min_price: 100000
+    min_sqft: 100
+  cv_type: stratified
+  mae_median: 204343.30888588825
+  mae_median_pct_of_mean_price: 0.23612828317983195
+  mae_median_pct_of_median_price: 0.2857948376026409
+  mean_price: 865391.0752836978
+  median_price: 715000.0
+  n_folds: 10
+  r2_median: 0.6815901256283508
+  rmse_median: 334120.07807424804
+  rmse_median_pct_of_mean_price: 0.3860914303567491
+  rmse_median_pct_of_median_price: 0.4673008084954518
+mlflow_version: 2.22.0
+model_size_bytes: 28334259
+model_uuid: ae3cc6322ea24d748c532b6ed1b091ae
+prompts: null
+run_id: 3e0c1c164f974378a9cf830b89e5cdf7
+saved_input_example_info:
+  artifact_path: input_example.json
+  pandas_orient: split
+  serving_input_path: serving_input_example.json
+  type: dataframe
+signature:
+  inputs: '[{"type": "long", "name": "BEDS", "required": true}, {"type": "double",
+    "name": "BATH", "required": true}, {"type": "double", "name": "PROPERTYSQFT",
+    "required": true}, {"type": "string", "name": "LOCALITY", "required": true}, {"type":
+    "string", "name": "SUBLOCALITY", "required": true}, {"type": "double", "name":
+    "LATITUDE", "required": true}, {"type": "double", "name": "LONGITUDE", "required":
+    true}, {"type": "long", "name": "PRICE_CAT", "required": true}]'
+  outputs: '[{"type": "tensor", "tensor-spec": {"dtype": "float64", "shape": [-1]}}]'
+  params: null
+type_hint_from_example: false
+utc_time_created: '2025-10-03 09:03:30.532111'

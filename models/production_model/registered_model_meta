@@ -1,0 +1,2 @@
+model_name: RandomForestRegressor
+model_version: '8'

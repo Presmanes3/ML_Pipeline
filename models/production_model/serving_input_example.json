@@ -1,0 +1,26 @@
+{
+  "dataframe_split": {
+    "columns": [
+      "BEDS",
+      "BATH",
+      "PROPERTYSQFT",
+      "LOCALITY",
+      "SUBLOCALITY",
+      "LATITUDE",
+      "LONGITUDE",
+      "PRICE_CAT"
+    ],
+    "data": [
+      [
+        3,
+        1.0,
+        2184.207862,
+        "Queens County",
+        "Queens",
+        40.7104509,
+        -73.7982064,
+        1
+      ]
+    ]
+  }
+}

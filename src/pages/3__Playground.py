@@ -20,13 +20,38 @@ client = MlflowClient()
 # ---------------------
 @st.cache_resource
 def load_model():
-    mlflow.set_tracking_uri("http://127.0.0.1:5000")
-    model_version = client.get_model_version_by_alias(
-        name="RandomForestRegressor", alias="production"
-    )
-    model_uri = f"models:/RandomForestRegressor/{model_version.version}"
-    model = mlflow.sklearn.load_model(model_uri)
-    return model, model_uri
+    local_model_dir = "./models/production_model"
+    os.makedirs(local_model_dir, exist_ok=True)
+
+    mlflow.set_tracking_uri("http://localhost:5000")
+    try:
+        # --- Attempt connection with MLflow ---
+        model_version = client.get_model_version_by_alias(
+            name="RandomForestRegressor", alias="production"
+        )
+        model_uri = f"models:/RandomForestRegressor/{model_version.version}"
+
+        # Download and overwrite model in ./models/production_model
+        local_path = download_artifacts(model_uri, dst_path=local_model_dir)
+        model = mlflow.sklearn.load_model(local_path)
+        st.success("✅ Model updated from MLflow.")
+        return model, model_uri
+
+    except Exception as e:
+        st.warning(f"⚠️ Could not connect to MLflow ({e}). Trying local model...")
+
+        # --- Use local model if it exists ---
+        if os.path.exists(local_model_dir):
+            try:
+                model = mlflow.sklearn.load_model(local_model_dir)
+                st.info("📦 Using local model in ./models/production_model")
+                return model, "local_model"
+            except Exception as e2:
+                st.error(f"❌ Could not load the local model: {e2}")
+                raise e2
+        else:
+            st.error("❌ No model found in MLflow or locally.")
+            raise RuntimeError("No model available.")
 
 @st.cache_data
 def load_metadata(model_uri: str):
