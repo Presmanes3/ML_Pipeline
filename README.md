@@ -48,6 +48,7 @@ This project demonstrates how to build and deploy a **full ML pipeline** for a r
 
 4. **Model Versioning**  
     - Saving the best model and versioning with MLflow Model Registry.  
+    - Using model aliases (e.g., "production", "staging") for deployment.
 
 5. **Interactive Visualization (Streamlit)**  
     - Dashboard to:  
@@ -61,7 +62,8 @@ This project demonstrates how to build and deploy a **full ML pipeline** for a r
 - [X] Build a reproducible pipeline for tabular data using scikit-learn. 
 - [X] Integrate MLflow for experiment tracking.  
 - [X] Save and version the best trained model.  
-- [ ] Create a **Streamlit dashboard** for playground and project description.  
+- [X] Create a **Streamlit dashboard** for playground and project description.  
+- [ ] Deploy Streamlit APP.
 
 ---
 

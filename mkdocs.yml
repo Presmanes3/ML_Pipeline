@@ -7,7 +7,9 @@ theme:
 nav:
   - Home: index.md
   - Problem Analysis: eda.md
-
+  - Business Requirements: business.md
+  - Playground: playground.md 
+  
 markdown_extensions:
   - md_in_html
   - admonition
