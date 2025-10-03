@@ -137,3 +137,46 @@ if st.session_state["history"]:
     st.subheader("📊 Prediction History")
     history_df = pd.DataFrame(st.session_state["history"])
     st.dataframe(history_df, use_container_width=True)
+
+# ---- Model Performance Section ----
+def fmt_currency(value):
+    """Format as currency or return N/A"""
+    if value is None:
+        return "N/A"
+    return f"${value:.2f}"
+
+def fmt_percent(value, digits=2):
+    """Format as percent or return N/A"""
+    if value is None:
+        return "N/A"
+    return f"{value:.{digits}%}"
+
+# ---- Model Performance Section ----
+with st.expander("ℹ️ How to interpret model performance metrics", expanded=False):
+    st.subheader("📈 Model Performance (Production)")
+
+    if metadata:
+        rmse = metadata.get("rmse_median")
+        rmse_pct_median = metadata.get("rmse_median_pct_of_median_price")
+        rmse_pct_mean = metadata.get("rmse_median_pct_of_mean_price")
+        mean_price = metadata.get("mean_price")
+        median_price = metadata.get("median_price")
+        r2 = metadata.get("r2_median")
+        mae = metadata.get("mae_median")
+
+        st.markdown(f"""
+        **How to interpret the performance of this model:**
+
+        - **Median RMSE:** {fmt_currency(rmse)}  
+        - **RMSE as % of median house price:** {fmt_percent(rmse_pct_median)}  
+        - **Median house price in dataset:** {fmt_currency(median_price)}  
+        - **RMSE as % of average house price:** {fmt_percent(rmse_pct_mean)}  
+        - **Average house price in dataset:** {fmt_currency(mean_price)}  
+        - **Median MAE:** {fmt_currency(mae)}  
+        - **R² (explained variance):** {r2:.2f}  
+
+        🔎 On average, the model’s prediction error is around 
+        **{fmt_percent(rmse_pct_median, 1)} of a typical house price**.  
+        """)
+    else:
+        st.info("No performance metadata available for this model.")

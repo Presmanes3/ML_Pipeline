@@ -19,17 +19,16 @@ st.title("🏠 House Price Prediction Platform")
 
 # Add a markdown description for the app
 st.markdown("""
-    Bienvenido a la plataforma de predicción de precios de viviendas en Nueva York. Esta aplicación está diseñada para ayudarte a explorar y analizar datos relacionados con los precios de las viviendas, así como para probar modelos de predicción.
+    Welcome to the New York House Price Prediction Platform. This application is designed to help you explore and analyze data related to house prices, as well as to test prediction models.
     
-    Esta aplicacion ha sido desarrollada por [Javier Presmanes](https://www.linkedin.com/in/javierpresmanescardama/) como parte de un proyecto de aprendizaje automático. Puedes encontrar el código fuente en [GitHub](https://github.com/Presmanes3/ML_Pipeline).
+    This application has been developed by [Javier Presmanes](https://www.linkedin.com/in/javierpresmanescardama/) as part of a machine learning project. You can find the source code on [GitHub](https://github.com/Presmanes3/ML_Pipeline).
     
-    Los datos utilizados en este proyecto provienen de [Kaggle](https://www.kaggle.com/datasets/nelgiriyewithana/new-york-housing-market) y han sido limpiados y preprocesados para su análisis.
+    The data used in this project comes from [Kaggle](https://www.kaggle.com/datasets/nelgiriyewithana/new-york-housing-market) and has been cleaned and preprocessed for analysis.
     
-    Esta aplicacion esta dividida en 4 secciones principales:
+    This application is divided into 4 main sections:
     1. **Problem Analysis (EDA)**: explore the data and its distributions.
-    2. **Pipeline & Model**: explicacion acerca de la pipeline de preprocesamiento y el modelo utilizado.
-    3. **Playground**: test the model with different inputs.
-    4. **Business Insights**: gain insights from the data and model.
+    2. **Playground**: test the model with different inputs.
+    3. **Business Insights**: gain insights from the data and model.
     
-    ¡Disfruta explorando y analizando los datos!
+    Enjoy exploring and analyzing the data!
     """)

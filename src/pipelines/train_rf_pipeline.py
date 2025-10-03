@@ -209,9 +209,12 @@ def main(args):
                     "rmse_median": float(median_rmse),
                     "rmse_median_pct_of_median_price": float(median_rmse / median_price),
                     "rmse_median_pct_of_mean_price": float(median_rmse / mean_price),
-                    "cleaner_params": cleaner.__dict__,
-                    "localities" : X["LOCALITY"].unique(),
-                    "sublocalities" : X["SUBLOCALITY"].unique(),
+                    "r2_median": float(np.median(metrics["r2"])),
+                    "mae_median": float(np.median(metrics["mae"])),
+                    "mae_median_pct_of_median_price": float(np.median(metrics["mae"]) / median_price),
+                    "mae_median_pct_of_mean_price": float(np.median(metrics["mae"]) / mean_price),
+                    # "features": preprocessor.base_columns + list(preprocessor.pipeline.named_transformers_["zones"].get_feature_names_out()),
+                    "cleaner_params": cleaner.__dict__
                 }
             )
             

@@ -136,7 +136,6 @@ with st.expander("Feature Engineering", expanded=False):
             """
             Structural features help capture property quality with respect to its size and internal layout:
 
-            - **PRICE_PER_SQFT_LOG**: Price per square foot in log scale — a better notion of relative price by size.  
             - **BEDS_PER_SQFT**: Bedrooms per square foot.  
             - **BATH_PER_SQFT**: Bathrooms per square foot.
             """
