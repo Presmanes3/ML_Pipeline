@@ -25,7 +25,7 @@ st.markdown("""
     
     The data used in this project comes from [Kaggle](https://www.kaggle.com/datasets/nelgiriyewithana/new-york-housing-market) and has been cleaned and preprocessed for analysis.
     
-    This application is divided into 4 main sections:
+    This application is divided into 3 main sections:
     1. **Problem Analysis (EDA)**: explore the data and its distributions.
     2. **Playground**: test the model with different inputs.
     3. **Business Insights**: gain insights from the data and model.
