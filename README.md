@@ -15,6 +15,11 @@ A **reproducible end-to-end ML pipeline** for house price prediction in New-York
 The full **project documentation** is available on **GitHub Pages** here:  
 👉 [Project Docs on GitHub Pages](https://presmanes3.github.io/NY-House-PricingPrediction)
 
+--- 
+
+## Live Demo
+A live demo of the Streamlit app is hosted on **Streamlit Cloud**:
+👉 [Live Streamlit App on Streamlit Cloud](https://presmanes3-ny-house-pricingprediction-srchome-vnbgnr.streamlit.app/)
 
 ---
 ## 🎯 Project Overview
