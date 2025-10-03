@@ -13,6 +13,10 @@ from mlflow.artifacts import download_artifacts
 # Config
 # ---------------------
 st.set_page_config(page_title="House Price Playground", layout="wide")
+
+
+mlflow.set_tracking_uri("http://localhost:5000")
+    
 client = MlflowClient()
 
 # ---------------------
@@ -23,48 +27,46 @@ def load_model():
     local_model_dir = "./models/production_model"
     os.makedirs(local_model_dir, exist_ok=True)
 
-    mlflow.set_tracking_uri("http://localhost:5000")
     try:
-        # --- Attempt connection with MLflow ---
+        # --- Intentar sincronización con MLflow ---
         model_version = client.get_model_version_by_alias(
             name="RandomForestRegressor", alias="production"
         )
         model_uri = f"models:/RandomForestRegressor/{model_version.version}"
 
-        # Download and overwrite model in ./models/production_model
-        local_path = download_artifacts(model_uri, dst_path=local_model_dir)
-        model = mlflow.sklearn.load_model(local_path)
-        st.success("✅ Model updated from MLflow.")
-        return model, model_uri
+        # Descargar y sobrescribir SIEMPRE en ./models/production_model
+        download_artifacts(model_uri, dst_path=local_model_dir)
+        st.success("✅ Modelo sincronizado desde MLflow.")
 
     except Exception as e:
-        st.warning(f"⚠️ Could not connect to MLflow ({e}). Trying local model...")
+        st.warning(f"⚠️ No se pudo sincronizar con MLflow ({e}). Usando modelo local...")
 
-        # --- Use local model if it exists ---
-        if os.path.exists(local_model_dir):
-            try:
-                model = mlflow.sklearn.load_model(local_model_dir)
-                st.info("📦 Using local model in ./models/production_model")
-                return model, "local_model"
-            except Exception as e2:
-                st.error(f"❌ Could not load the local model: {e2}")
-                raise e2
-        else:
-            st.error("❌ No model found in MLflow or locally.")
-            raise RuntimeError("No model available.")
+    # --- Siempre usar el modelo local ---
+    try:
+        model = mlflow.sklearn.load_model(local_model_dir)
+        return model, "local_model"
+    except Exception as e2:
+        st.error(f"❌ No se pudo cargar el modelo local: {e2}")
+        raise e2
+
 
 @st.cache_data
-def load_metadata(model_uri: str):
-    local_path = download_artifacts(model_uri)
-    with open(os.path.join(local_path, "MLmodel")) as f:
-        mlmodel_yaml = yaml.safe_load(f)
-    return mlmodel_yaml.get("metadata", {})
+def load_metadata():
+    local_model_dir = "./models/production_model"
+    mlmodel_path = os.path.join(local_model_dir, "MLmodel")
+    if os.path.exists(mlmodel_path):
+        with open(mlmodel_path) as f:
+            mlmodel_yaml = yaml.safe_load(f)
+        return mlmodel_yaml.get("metadata", {})
+    else:
+        st.warning("⚠️ No se encontró el archivo MLmodel en el modelo local.")
+        return {}
 
 # ---------------------
 # Load model + metadata
 # ---------------------
 model, model_uri = load_model()
-metadata = load_metadata(model_uri)
+metadata = load_metadata()
 
 # ---------------------
 # Session state init

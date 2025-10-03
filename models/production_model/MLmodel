@@ -1,4 +1,4 @@
-artifact_path: random_forest_regressor
+artifact_path: s3://mlflow/1/models/m-f2a07a12a9b74dbc98c97bc0f0523960/artifacts
 flavors:
   python_function:
     env:
@@ -7,12 +7,12 @@ flavors:
     loader_module: mlflow.sklearn
     model_path: model.pkl
     predict_fn: predict
-    python_version: 3.12.0
+    python_version: 3.13.5
   sklearn:
     code: null
     pickled_model: model.pkl
     serialization_format: cloudpickle
-    sklearn_version: 1.6.1
+    sklearn_version: 1.7.2
 is_signature_from_type_hint: false
 metadata:
   cleaner_params:
@@ -35,11 +35,12 @@ metadata:
   rmse_median: 334120.07807424804
   rmse_median_pct_of_mean_price: 0.3860914303567491
   rmse_median_pct_of_median_price: 0.4673008084954518
-mlflow_version: 2.22.0
-model_size_bytes: 28334259
-model_uuid: ae3cc6322ea24d748c532b6ed1b091ae
+mlflow_version: 3.4.0
+model_id: m-f2a07a12a9b74dbc98c97bc0f0523960
+model_size_bytes: 28334104
+model_uuid: m-f2a07a12a9b74dbc98c97bc0f0523960
 prompts: null
-run_id: 3e0c1c164f974378a9cf830b89e5cdf7
+run_id: 59c965e28ce7421eb622f8dd6b1a694c
 saved_input_example_info:
   artifact_path: input_example.json
   pandas_orient: split
@@ -55,4 +56,4 @@ signature:
   outputs: '[{"type": "tensor", "tensor-spec": {"dtype": "float64", "shape": [-1]}}]'
   params: null
 type_hint_from_example: false
-utc_time_created: '2025-10-03 09:03:30.532111'
+utc_time_created: '2025-10-03 11:42:01.561892'
